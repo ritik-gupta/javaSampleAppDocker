@@ -1,7 +1,7 @@
 name: BuildOnPR
 
 on:
-  pull_request:
+  push:
     branches: 
       - main
 # We also want to be able to run this manually from Github
