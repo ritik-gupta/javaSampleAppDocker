@@ -39,5 +39,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: gritik95/java-demo:latest
+          tags: quarkus_test:latest
     

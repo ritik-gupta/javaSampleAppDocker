@@ -1,7 +1,6 @@
-# Use the official maven/Java 17 image to create a build artifact.
-FROM maven:3.8.4-openjdk-17 as builder
+# Use Maven to build the application
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.18 as builder
 
-# Set the working directory in the image
 WORKDIR /app
 
 # Copy the pom.xml file
@@ -10,14 +9,24 @@ COPY pom.xml .
 # Copy the src directory (Your Java source code)
 COPY src ./src
 
+# Copy the build script
+COPY .mvn .mvn
+COPY mvnw mvnw
+
 # Build a release artifact.
-RUN mvn clean install
+RUN ./mvnw clean package -DskipTests
 
-# Use AdoptOpenJDK for base image.
-FROM eclipse-temurin:17-jdk
 
-# Copy the jar to the production image from the builder stage.
-COPY --from=builder /app/target/java-app-runner.jar /java-app.jar
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.18
 
-# Run the web service on container startup.
-CMD ["java", "-jar", "/java-app.jar"]
+ENV LANGUAGE='en_US:en'
+
+COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
+COPY --chown=185 target/quarkus-app/*.jar /deployments/
+COPY --chown=185 target/quarkus-app/app/ /deployments/app/
+COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+
+EXPOSE 8080
+USER 185
+
+ENTRYPOINT ["java", "-jar", "/deployments/quarkus-run.jar" ]
