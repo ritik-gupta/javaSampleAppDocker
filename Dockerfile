@@ -14,7 +14,6 @@ COPY .mvn .mvn
 COPY mvnw mvnw
 
 # Build a release artifact.
-RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 
