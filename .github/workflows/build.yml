@@ -8,15 +8,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  lintReusableWF:
-    permissions:
-      contents: read
-      packages: read
-      statuses: write
-    uses: akshaykumarthakurnew/CloudhackathonSrc/.github/workflows/linter.yml@main
+  # lintReusableWF:
+  #   permissions:
+  #     contents: read
+  #     packages: read
+  #     statuses: write
+  #   uses: akshaykumarthakurnew/CloudhackathonSrc/.github/workflows/linter.yml@main
   
   createDockerImage:
-    needs: [lintReusableWF]
+    # needs: [lintReusableWF]
     runs-on: ubuntu-latest
     
     steps:
