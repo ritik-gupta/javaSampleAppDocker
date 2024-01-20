@@ -36,6 +36,9 @@ jobs:
         run:  cat src/main/resources/application.properties
               ./mvnw clean package -DskipTests
 
+      - name: Check env variables
+        run: echo ${DBHOST} && echo ${DBNAME} && echo ${DBUSER} && echo ${DBPASS}
+
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
         env:
