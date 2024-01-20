@@ -32,12 +32,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create image
-        run:  cat src/main/resources/application.properties
-              ./mvnw clean package -DskipTests
-
       - name: Check env variables
         run: echo ${DBHOST} && echo ${DBNAME} && echo ${DBUSER} && echo ${DBPASS}
+
+      - name: Create image
+        run:  ./mvnw clean package -DskipTests
 
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
