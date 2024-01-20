@@ -13,6 +13,8 @@ env:
   DBUSER: ${{ vars.DBUSER }}
   DBPASS: ${{ secrets.DBPASS }}
   USER_NAME: ${{ vars.USER_NAME }}
+  resource_group: "1-67711aaf-playground-sandbox"
+  cluster_name: quarkus
   
 jobs:
   # lintReusableWF:
@@ -46,3 +48,30 @@ jobs:
         uses: actions-hub/docker@v1.0.3
         with:
           args: push ${{ env.quarkus_tag }}:latest
+
+      # Deploy to AKS
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: '${{ env.resource_group }}' 
+          cluster-name: '${{ env.cluster_name }}'
+
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+        
+      - name: Deploy to AKS
+        id: deploy-aks
+        uses: Azure/k8s-deploy@v4
+        with:
+          namespace: 'default'
+          manifests: |
+            target/kubernetes/kubernetes.yml 
+          pull-images: false 
