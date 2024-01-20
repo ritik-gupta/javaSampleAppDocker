@@ -1,5 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://json.schemastore.org/github-action.json": "file:///Users/ritikgupta3/Documents/akshay/javaSampleAppDocker/workflows/build.yml"
-    }
-}

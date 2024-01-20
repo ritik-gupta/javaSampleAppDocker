@@ -7,6 +7,13 @@ on:
 # We also want to be able to run this manually from Github
   workflow_dispatch:
 
+env:
+  DBHOST: ${{ vars.DBHOST }}
+  DBNAME: ${{ vars.DBNAME }}
+  DBUSER: ${{ vars.DBUSER }}
+  DBPASS: ${{ secrets.DBPASS }}
+  USER_NAME: ${{ vars.USER_NAME }}
+  
 jobs:
   # lintReusableWF:
   #   permissions:
@@ -28,16 +35,15 @@ jobs:
         with:
           driver: docker
 
+      - name: Create image
+        run:  ./mvnw clean package -DskipTests
+
       - name: Login to DockerHub
         uses: docker/login-action@v3.0.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v5.1.0
-        with:
-          context: .
-          push: true
-          tags: gritik95/quarkus_test:latest
-    
+      - name: Push Docker Image
+        run: export quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) 
+             docker push ${quarkus_tag}:latest 
