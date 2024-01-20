@@ -8,11 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  DBHOST: ${{ vars.DBHOST }}
-  DBNAME: ${{ vars.DBNAME }}
-  _PROD_QUARKUS_DATASOURCE_USERNAME: ${{ vars.DBUSER }}
-  _PROD_QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.DBPASS }}
-  USER_NAME: ${{ vars.USER_NAME }}
   resource_group: "1-67711aaf-playground-sandbox"
   cluster_name: quarkus
   
