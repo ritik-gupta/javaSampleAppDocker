@@ -36,8 +36,8 @@ jobs:
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker Tag
         run: export quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) >> $GITHUB_ENV
