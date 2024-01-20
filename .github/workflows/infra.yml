@@ -16,8 +16,6 @@ on:
             required: false
             default: "East US"
 
-
-
 jobs:
   infra:
 
@@ -27,7 +25,6 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Azure login
-      id: login
       uses: azure/login@v1.4.3
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -35,7 +32,7 @@ jobs:
     - name: Deploy Template
       run: |
         # az group create --name ${{ inputs.rg_name }} --location ${{ inputs.location }}
-        az postgres server create --resource-group ${{ inputs.rg_name }} --name "postgres" --location ${{ inputs.location }} --admin-user "quarkus_test" --admin-password "Test@123" --sku-name GP_Gen5_2
-        az postgres server firewall-rule create --resource-group ${{ inputs.rg_name }} --server-name "postgres" --name AllowAllWindowsAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+        az postgres flexible-server create --name "postgres" --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --admin-user "quarkus_test" --admin-password "Test@123"
+        az postgres flexible-server firewall-rule create --resource-group ${{ inputs.rg_name }} --server-name "postgres" --name AllowAllWindowsAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
         az postgres db create --resource-group ${{ inputs.rg_name }} --server-name "postgres" --name "quarkus_test"
         az aks create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name "quarkus" --node-count 1 --generate-ssh-keys --enable-managed-identity
