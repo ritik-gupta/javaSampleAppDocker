@@ -18,7 +18,9 @@ on:
         postgres_db_server_name:
             required: false
             default: "postgrestestritik"
-
+        acr_name:
+            required: false
+            default: "quarkustestacrritik"
 jobs:
   infra:
 
@@ -37,4 +39,5 @@ jobs:
         # az group create --name ${{ inputs.rg_name }} --location ${{ inputs.location }}
         az postgres flexible-server create --name ${{ inputs.postgres_db_server_name }} --resource-group "1-770a3e3a-playground-sandbox" --location "East US" --admin-user "quarkus_test" --admin-password "Test@123" --sku-name Standard_B1ms --tier Burstable --public-access 0.0.0.0-0.0.0.0
         az postgres flexible-server db create --resource-group ${{ inputs.rg_name }}  --server-name ${{ inputs.postgres_db_server_name }} --database-name quarkus_test
+        # az acr create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name ${{ inputs.acr_name }} --sku Basic --admin-enabled
         az aks create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name "quarkus" --node-count 1 --generate-ssh-keys --enable-managed-identity
