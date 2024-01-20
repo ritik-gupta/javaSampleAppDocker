@@ -88,4 +88,6 @@ jobs:
           helm upgrade -i helmtestritik *.tgz
 
       - name: What IP
-        run: kubectl get svc | grep hibernate-orm | cut -d " " -f10
+        run: |
+          sleep 15
+          kubectl get svc | grep hibernate-orm | cut -d " " -f10
