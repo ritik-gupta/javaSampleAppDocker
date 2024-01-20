@@ -45,5 +45,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker Image
-        run: export quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) 
+        run: export quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) && \
              docker push ${quarkus_tag}:latest 
