@@ -79,4 +79,4 @@ jobs:
 
       - name: Deploy to AKS using helm
         run: |
-          helm install helmtest *.tgz
+          helm upgrade -i helmtestritik *.tgz
