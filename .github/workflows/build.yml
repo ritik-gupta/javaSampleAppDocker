@@ -63,8 +63,6 @@ jobs:
       - name: Build helm chart
         run: |
           helm package target/helm/kubernetes/*
-          ls 
-      #     mv target/helm/kubernetes/*.tgz helm_chart.tgz
 
       # # - name: Setup kubectl
       # #   id: install-kubectl
@@ -78,6 +76,6 @@ jobs:
       # #     manifests: |
       # #       target/kubernetes/kubernetes.yml 
       # #     pull-images: false 
-      # - name: Deploy to AKS using helm
-      #   run: |
-      #     helm upgrade --install helmtest helm_chart.tgz
+      - name: Deploy to AKS using helm
+        run: |
+          helm upgrade --install helmtest helm_chart.tgz
