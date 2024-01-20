@@ -40,9 +40,9 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker Tag
-        run: export quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) >> $GITHUB_ENV
+        run: echo quarkus_tag=$(docker images | grep quarkus_test_aks | head -n1 | cut -d " " -f1) >> $GITHUB_ENV
       
       - name: Push the image
         uses: actions-hub/docker@v1.0.3
         with:
-          args: push $quarkus_tag:latest
+          args: push ${{ env.quarkus_tag }}:latest
