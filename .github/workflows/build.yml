@@ -78,4 +78,4 @@ jobs:
       # #     pull-images: false 
       - name: Deploy to AKS using helm
         run: |
-          helm upgrade --install helmtest helm_chart.tgz
+          helm upgrade --install helmtest *.tgz
