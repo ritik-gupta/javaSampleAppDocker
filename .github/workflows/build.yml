@@ -76,6 +76,7 @@ jobs:
       # #     manifests: |
       # #       target/kubernetes/kubernetes.yml 
       # #     pull-images: false 
+      
       - name: Deploy to AKS using helm
         run: |
           helm upgrade --install helmtest *.tgz
