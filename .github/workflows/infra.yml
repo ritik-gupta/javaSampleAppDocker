@@ -15,6 +15,9 @@ on:
         location:
             required: false
             default: "East US"
+        postgres_db_server_name:
+            required: false
+            default: "postgrestestritik"
 
 jobs:
   infra:
@@ -32,7 +35,6 @@ jobs:
     - name: Deploy Template
       run: |
         # az group create --name ${{ inputs.rg_name }} --location ${{ inputs.location }}
-        az postgres flexible-server create --name "postgres" --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --admin-user "quarkus_test" --admin-password "Test@123"
-        az postgres flexible-server firewall-rule create --resource-group ${{ inputs.rg_name }} --server-name "postgres" --name AllowAllWindowsAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
-        az postgres db create --resource-group ${{ inputs.rg_name }} --server-name "postgres" --name "quarkus_test"
+        az postgres flexible-server create --name ${{ inputs.postgres_db_server_name }} --resource-group "1-770a3e3a-playground-sandbox" --location "East US" --admin-user "quarkus_test" --admin-password "Test@123" --sku-name Standard_B1ms --tier Burstable --public-access 0.0.0.0-0.0.0.0
+        az postgres flexible-server db create --resource-group ${{ inputs.rg_name }}  --server-name ${{ inputs.postgres_db_server_name }} --database-name quarkus_test
         az aks create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name "quarkus" --node-count 1 --generate-ssh-keys --enable-managed-identity

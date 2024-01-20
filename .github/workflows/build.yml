@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  resource_group: "1-67711aaf-playground-sandbox"
+  resource_group: "1-770a3e3a-playground-sandbox"
   cluster_name: quarkus
   
 jobs:
@@ -19,6 +19,12 @@ jobs:
   #     statuses: write
   #   uses: akshaykumarthakurnew/CloudhackathonSrc/.github/workflows/linter.yml@main
   
+  # {
+  #   "clientSecret":  "******",
+  #   "subscriptionId":  "******",
+  #   "tenantId":  "******",
+  #   "clientId":  "******"
+  # }
   createDockerImage:
     # needs: [lintReusableWF]
     runs-on: ubuntu-latest
