@@ -1,4 +1,4 @@
-name: BuildOnPR
+name: Build & Push
 
 on:
   # push:
@@ -6,10 +6,22 @@ on:
   #     - main
 # We also want to be able to run this manually from Github
   workflow_dispatch:
-
-env:
-  resource_group: "1-770a3e3a-playground-sandbox"
-  cluster_name: quarkus
+    inputs:
+      rg_name: 
+          required: false
+          default: "ritiktest-rg"
+      location:
+          required: false
+          default: "East US"
+      postgres_db_server_name:
+          required: false
+          default: "postgrestestritik"
+      acr_name:
+          required: false
+          default: "quarkustestacrritik"
+      cluster_name:
+          required: false
+          default: quarkus
   
 jobs:
   # lintReusableWF:
@@ -25,7 +37,7 @@ jobs:
   #   "tenantId":  "******",
   #   "clientId":  "******"
   # }
-  createDockerImage:
+  create_PushDockerImage:
     # needs: [lintReusableWF]
     runs-on: ubuntu-latest
     
@@ -60,8 +72,8 @@ jobs:
         id: set-context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: '${{ env.resource_group }}' 
-          cluster-name: '${{ env.cluster_name }}'
+          resource-group: '${{ inputs.rg_name }}' 
+          cluster-name: '${{ inputs.cluster_name }}'
 
       - name: Install Helm
         uses: Azure/setup-helm@v3.5
