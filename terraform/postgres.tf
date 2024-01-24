@@ -10,7 +10,7 @@ resource "azurerm_postgresql_server" "this" {
   version    = "11"
   storage_mb = 5120
 
-  backup_retention_days        = 7
+  backup_retention_days = 7
 
   public_network_access_enabled    = false
   ssl_enforcement_enabled          = true

@@ -7,7 +7,7 @@ resource "azurerm_private_endpoint" "example" {
   private_service_connection {
     name                           = "postgres-aks-privateserviceconnection"
     private_connection_resource_id = azurerm_postgresql_server.this.id
-    subresource_names              = [ "postgresqlServer" ]
+    subresource_names              = ["postgresqlServer"]
     is_manual_connection           = false
   }
 }

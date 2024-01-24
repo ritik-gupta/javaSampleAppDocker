@@ -1,9 +1,9 @@
 variable "resource_group_name" {
   description = "name of the rg"
-  type = string
+  type        = string
 }
 
 variable "location" {
   description = "Location of the resources"
-  type = string
+  type        = string
 }
