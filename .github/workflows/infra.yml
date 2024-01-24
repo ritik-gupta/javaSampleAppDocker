@@ -5,7 +5,6 @@ on:
   #  branches:
   #    - main
 
-      
   # We also want to be able to run this manually from Github
   workflow_dispatch:
     inputs:
@@ -15,15 +14,13 @@ on:
         location:
             required: false
             default: "East US"
-        postgres_db_server_name:
-            required: false
-            default: "postgrestestritik"
-        acr_name:
-            required: false
-            default: "quarkustestacrritik"
+    
+env:
+  TF_VAR_resource_group_name: ${{ inputs.rg_name }}
+  TF_VAR_location: ${{ inputs.location }}
+
 jobs:
   infra:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -34,10 +31,44 @@ jobs:
       with:
        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy Template
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      shell: bash
+      id: init
+      run:
+        terraform init -no-color ${{ inputs.upgrade_provider && '-upgrade ' || '' }}
+      working-directory: terraform
+
+    - name: Terraform Validate
+      id: validate
+      shell: bash
+      run: terraform validate -no-color
+      working-directory: terraform
+
+    - name: Terraform Plan
+      id: plan
       run: |
-        # az group create --name ${{ inputs.rg_name }} --location ${{ inputs.location }}
-        az postgres flexible-server create --name ${{ inputs.postgres_db_server_name }} --resource-group "${{ inputs.rg_name }}" --location "${{ inputs.location }}" --admin-user "quarkus_test" --admin-password "Test@123" --sku-name Standard_B1ms --tier Burstable --public-access 0.0.0.0-0.0.0.0
-        az postgres flexible-server db create --resource-group ${{ inputs.rg_name }}  --server-name ${{ inputs.postgres_db_server_name }} --database-name quarkus_test
-        # az acr create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name ${{ inputs.acr_name }} --sku Basic --admin-enabled
-        az aks create --resource-group "${{ inputs.rg_name }}" --location "${{ inputs.location }}" --name "quarkus" --node-count 1 --generate-ssh-keys --enable-managed-identity
+        terraform plan  \
+          -out="tf.plan" \
+          -input=false \
+          -no-color 
+      working-directory: terraform
+
+    - name: Terraform Apply
+      id: apply
+      run: |
+        terraform apply -no-color \
+        -compact-warnings \
+        -auto-approve \
+        tf.plan
+      working-directory: terraform
+      
+    # - name: Deploy Template
+    #   run: |
+    #     # az group create --name ${{ inputs.rg_name }} --location ${{ inputs.location }}
+    #     az postgres flexible-server create --name ${{ inputs.postgres_db_server_name }} --resource-group "${{ inputs.rg_name }}" --location "${{ inputs.location }}" --admin-user "quarkus_test" --admin-password "Test@123" --sku-name Standard_B1ms --tier Burstable --public-access 0.0.0.0-0.0.0.0
+    #     az postgres flexible-server db create --resource-group ${{ inputs.rg_name }}  --server-name ${{ inputs.postgres_db_server_name }} --database-name quarkus_test
+    #     # az acr create --resource-group ${{ inputs.rg_name }} --location ${{ inputs.location }} --name ${{ inputs.acr_name }} --sku Basic --admin-enabled
+    #     az aks create --resource-group "${{ inputs.rg_name }}" --location "${{ inputs.location }}" --name "quarkus" --node-count 1 --generate-ssh-keys --enable-managed-identity
